@@ -5,9 +5,7 @@ from flask_cors import CORS, cross_origin
 import io
 from bs4 import BeautifulSoup
 import certifi
-from googlecloudapi import getCloudAPIDetails, saveImage
 import requests, json, shutil, os
-from basesix4 import basesix4
 app = Flask(__name__)
 history=[]
 alldata=[]
@@ -42,6 +40,7 @@ def search():
 	conn.perform()
 	conn.close()
 	soup = BeautifulSoup(io_code.getvalue().decode('UTF-8'),'html.parser')
+	print(soup,file=open('soup.html','w'))
 	results = {
 	    'links': [],
 	    'descriptions': [],
@@ -49,9 +48,14 @@ def search():
 	    'similar_images': [],
 	    'best_guess': ''
 	}
+	for div in soup.findAll('div', attrs={'class':'O1id0e'}):
+		if(div.get_text().find('No other sizes of this image found')==-1):
+			results['previous_accurance']=True
+		else:
+			results['previous_accurance']=False
 	for div in soup.findAll('div', attrs={'class':'rc'}):
-	    sLink = div.find('a')
-	    results['links'].append(sLink['href'])
+		sLink = div.find('a')
+		results['links'].append(sLink['href'])
 	for desc in soup.findAll('span', attrs={'class':'st'}):
 	    results['descriptions'].append(desc.get_text())
 	for title in soup.findAll('h3', attrs={'class':'r'}):
