@@ -7,8 +7,8 @@ from bs4 import BeautifulSoup
 import certifi
 import requests, json, shutil, os
 app = Flask(__name__)
-history=[]
-alldata=[]
+history_=[]
+alldata={}
 @app.route('/')
 def welcome():
     print ('welcome() function called')
@@ -16,11 +16,11 @@ def welcome():
 @app.route('/history')
 def history():
 	print('history() function called')
-	return jsonify(history)
+	return jsonify(history_)
 @app.route('/data')
 def data():
 	print('data() function called')
-	return alldata;
+	return jsonify(alldata);
 @app.route('/search', methods = ['POST'])
 def search():
 	print('search() function called')
@@ -28,12 +28,14 @@ def search():
 		return "Requests must be in JSON format. Please make sure the header is 'application/json' and the JSON is valid."
 	client_json = json.dumps(request.json)
 	client_data = json.loads(client_json)
+	url='https://www.google.com/searchbyimage?hl=en-US&image_url='+client_data['image_url']
+	history_.append(url)
 	if app.debug:
-	    print('POST: ' + 'https://www.google.com/searchbyimage?hl=en-US&image_url='+client_data['image_url'])
+	    print('POST: ' + url)
 	io_code=io.BytesIO()
 	conn = pycurl.Curl()
 	conn.setopt(conn.CAINFO, certifi.where())
-	conn.setopt(conn.URL, str('https://www.google.com/searchbyimage?hl=en-US&image_url='+client_data['image_url']))
+	conn.setopt(conn.URL, str(url))
 	conn.setopt(conn.FOLLOWLOCATION, 1)
 	conn.setopt(conn.USERAGENT, 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:61.0) Gecko/20100101 Firefox/61.0')
 	conn.setopt(conn.WRITEFUNCTION, io_code.write)
@@ -67,6 +69,7 @@ def search():
 	for best_guess in soup.findAll('a', attrs={'class':'fKDtNb'}):
 	  results['best_guess'] = best_guess.get_text()
 	print("Successful search")
+	alldata[client_data['image_url']]=results
 	return json.dumps(results)
 
 if __name__ == '__main__':
