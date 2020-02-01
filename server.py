@@ -6,6 +6,7 @@ import io
 from bs4 import BeautifulSoup
 import certifi
 import requests, json, shutil, os
+from operations import operations
 app = Flask(__name__)
 history_=[]
 alldata={}
@@ -28,6 +29,7 @@ def search():
 		return "Requests must be in JSON format. Please make sure the header is 'application/json' and the JSON is valid."
 	client_json = json.dumps(request.json)
 	client_data = json.loads(client_json)
+	print(client_data['image_url'])
 	url='https://www.google.com/searchbyimage?hl=en-US&image_url='+client_data['image_url']
 	history_.append(url)
 	if app.debug:
@@ -52,9 +54,9 @@ def search():
 	}
 	for div in soup.findAll('div', attrs={'class':'O1id0e'}):
 		if(div.get_text().find('No other sizes of this image found')==-1):
-			results['previous_accurance']=True
+			results['previous_occurence']=True
 		else:
-			results['previous_accurance']=False
+			results['previous_occurence']=False
 	for div in soup.findAll('div', attrs={'class':'rc'}):
 		sLink = div.find('a')
 		results['links'].append(sLink['href'])
@@ -69,6 +71,8 @@ def search():
 	for best_guess in soup.findAll('a', attrs={'class':'fKDtNb'}):
 	  results['best_guess'] = best_guess.get_text()
 	print("Successful search")
+#	print(results)
+#	results['diff']=operations(results)
 	alldata[client_data['image_url']]=results
 	return json.dumps(results)
 
@@ -80,9 +84,9 @@ if __name__ == '__main__':
     args = parser.parse_args()
     if args.debug:
         app.debug = True
-    if args.cors:
-        CORS(app, resources=r'/search/*')
-        app.config['CORS_HEADERS'] = 'Content-Type'
-        search = cross_origin(search)
-        print(" * Running with CORS enabled")
+#    if args.cors:
+    CORS(app, resources=r'/search/*')
+    app.config['CORS_HEADERS'] = 'Content-Type'
+    search = cross_origin(search)
+    print(" * Running with CORS enabled")
     app.run(host='0.0.0.0', port=args.port)
