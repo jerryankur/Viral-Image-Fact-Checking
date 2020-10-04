@@ -1,0 +1,5 @@
+pycurl
+flask
+flask_cors
+bs4
+operations
