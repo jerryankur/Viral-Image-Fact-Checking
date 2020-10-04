@@ -2,8 +2,12 @@
 An online tool to verify if a viral image shared online recently is actually from recent times or if it has been picked up from a past incident to raise tensions over a controversial viral discussion. We’d effectively be making a tool to detect and flag fake news
 
 REQUIREMENTS:- 
-Run on server side to fulfill the requirements
-python install -r requirements.txt
+pycurl
+flask
+flask_cors
+bs4
+operations
+
 
 server.py - to host http server either locally or remotely on AWS etc.
 Usuage: python server.py
