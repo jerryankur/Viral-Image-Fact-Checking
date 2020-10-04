@@ -19,8 +19,8 @@ Usuage: python server.py
 run.py - to run the application in terminal
 Usage: python run.py
 
-/public_html/index.html - run the application in browser
-/public_html/javascript.js - perform functions .  (edit the server dns/ip with your ip before running)
+index.html - run the application in browser
+javascript.js - perform functions .  (edit the server dns/ip with your ip before running)
 
 operations.py -  currently working to add other operations like getting the oldest corresponding news, image first time appeared on internet
 
