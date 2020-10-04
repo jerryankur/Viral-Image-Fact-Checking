@@ -3,7 +3,8 @@ let index;
 function fun()
 {
 	let xhr = new XMLHttpRequest();
-	xhr.open("POST", "http://ec2-18-221-131-219.us-east-2.compute.amazonaws.com:5000/search", true); //write your own server here
+	console.log("request sent");
+	xhr.open("POST", "http://ec2-18-216-89-211.us-east-2.compute.amazonaws.com:5000/search", true); //write your own server here
 	xhr.setRequestHeader("Content-Type", "application/json");
 	xhr.onreadystatechange = function () {
     if (xhr.readyState === 4 && xhr.status === 200) {

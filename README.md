@@ -9,6 +9,9 @@ bs4
 operations
 pandas
 numpy
+requests
+certifi
+
 
 server.py - to host http server either locally or remotely on AWS etc.
 Usuage: python server.py
